@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'core/app_colors.dart';
 import 'providers/auth_provider.dart';
 import 'providers/product_provider.dart';
 import 'providers/cart_provider.dart';
@@ -15,6 +16,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: AppColors.primary,
+      primary: AppColors.primary,
+      surface: AppColors.surface,
+      onSurface: AppColors.midnight,
+      brightness: Brightness.light,
+    );
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
@@ -25,8 +34,30 @@ class MyApp extends StatelessWidget {
         title: 'App Tienda',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
+          fontFamily: 'Inter',
+          colorScheme: colorScheme,
+          scaffoldBackgroundColor: AppColors.background,
+          textTheme: const TextTheme(
+            bodyLarge: TextStyle(color: AppColors.midnight),
+            bodyMedium: TextStyle(color: AppColors.midnight),
+            titleLarge: TextStyle(
+              color: AppColors.midnight,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.surface,
+            foregroundColor: AppColors.midnight,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+          ),
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+            ),
+          ),
         ),
         home: const SplashScreen(),
       ),

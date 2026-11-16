@@ -10,6 +10,7 @@ class ProductProvider extends ChangeNotifier {
   List<Product> _products = [];
   Product? _selectedProduct;
   int? _selectedCategoryId;
+  String _searchQuery = '';
   bool _isLoading = false;
   String? _error;
 
@@ -17,8 +18,36 @@ class ProductProvider extends ChangeNotifier {
   List<Product> get products => _products;
   Product? get selectedProduct => _selectedProduct;
   int? get selectedCategoryId => _selectedCategoryId;
+  String get searchQuery => _searchQuery;
   bool get isLoading => _isLoading;
   String? get error => _error;
+
+  /// Productos visibles: lista de API (ya filtrada por categoría) + búsqueda local.
+  List<Product> get visibleProducts => filterBySearch(_products, _searchQuery);
+
+  /// Filtro local por nombre/descripción (sin HTTP).
+  static List<Product> filterBySearch(List<Product> products, String query) {
+    final q = query.trim().toLowerCase();
+    if (q.isEmpty) return products;
+
+    return products.where((product) {
+      final name = product.name.toLowerCase();
+      final description = (product.description ?? '').toLowerCase();
+      return name.contains(q) || description.contains(q);
+    }).toList();
+  }
+
+  void setSearchQuery(String query) {
+    if (_searchQuery == query) return;
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    if (_searchQuery.isEmpty) return;
+    _searchQuery = '';
+    notifyListeners();
+  }
 
   Future<void> loadCategories() async {
     _isLoading = true;
@@ -40,6 +69,7 @@ class ProductProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     _selectedCategoryId = categoryId;
+    // Conserva _searchQuery al cambiar de categoría o refrescar.
     notifyListeners();
 
     try {
