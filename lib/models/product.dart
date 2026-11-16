@@ -23,9 +23,17 @@ class Product {
       name: json['name'] as String,
       description: json['description'] as String?,
       price: double.parse(json['price'].toString()),
-      imageUrl: json['image_url'] as String?,
+      imageUrl: _parseImageUrl(json['image_url']),
       categoryId: json['category_id'] as int,
       categoryName: json['category_name'] as String?,
     );
+  }
+
+  /// Normaliza image_url: null, ausente o cadena vacía → null.
+  static String? _parseImageUrl(dynamic value) {
+    if (value == null) return null;
+    final url = value.toString().trim();
+    if (url.isEmpty) return null;
+    return url;
   }
 }

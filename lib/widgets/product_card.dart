@@ -13,6 +13,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = product.imageUrl;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -21,19 +24,36 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: product.imageUrl != null
+              child: hasImage
                   ? Image.network(
-                      product.imageUrl!,
+                      imageUrl,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => Container(
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          color: Colors.grey[200],
+                          child: const Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.grey[200],
-                        child: const Icon(Icons.image, size: 48),
+                        child: const Center(
+                          child: Icon(Icons.broken_image_outlined, size: 48),
+                        ),
                       ),
                     )
                   : Container(
                       color: Colors.grey[200],
-                      child: const Center(child: Icon(Icons.image, size: 48)),
+                      child: const Center(
+                        child: Icon(Icons.image_outlined, size: 48),
+                      ),
                     ),
             ),
             Padding(

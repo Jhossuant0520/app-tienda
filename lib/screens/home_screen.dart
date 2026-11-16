@@ -83,8 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (productProvider.categories.isNotEmpty)
+              // Altura mínima para FilterChip con avatar de imagen (sin rediseñar el layout).
               SizedBox(
-                height: 50,
+                height: 56,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
